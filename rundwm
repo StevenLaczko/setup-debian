@@ -1,0 +1,8 @@
+#! /bin/bash
+/src/dwm/dwm &
+pid=$!
+
+while kill -0 $pid 2> /dev/null; do
+    xsetroot -name "$(upower -d | grep battery_BAT1 -A 21 | grep -i 'percentage' | sed 's/:[[:blank:]]*/: /') | $(date)"
+    sleep 0.5s
+done;
