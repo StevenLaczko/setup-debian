@@ -6,8 +6,8 @@ read line;
 
 . ./config.sh
 
-cp "$curdir/.bashrc" "$HOME"
-source "$HOME/.bashrc"
+cp "$curdir/bashrc" "$HOME/.bashrc"
+. "$HOME/.bashrc"
 sudo cp "$curdir/rundwm" /usr/local/bin
 
 # Apt update stuff
@@ -18,7 +18,7 @@ if [[ $* != --no-tmux ]]; then
     # tmux conf
     sudo apt install tmux -y
     sudo apt-get install -f
-    cp "$curdir/.tmux.conf" "$HOME"
+    cp "$curdir/tmux.conf" "$HOME/.tmux.conf"
     echo "Tmux installed"
 fi
 
