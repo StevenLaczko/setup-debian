@@ -1,9 +1,7 @@
 echo "Make sure you're connected to the internet before running this, ethernet's fine"
-while read line; do
-    :
-done
+read line;
 
-source ./config.sh
+. ./config.sh
 
 $curdir=$(pwd)
 
@@ -16,6 +14,8 @@ sudo apt upgrade
 sudo apt update -y
 sudo apt install git vim x11-common tmux network-manager
 sudo apt-get install -f
+
+echo "https://github.com/gokcehan/lf"
 
 # tmux conf
 cp ./.tmux.conf $HOME
