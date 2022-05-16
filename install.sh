@@ -1,6 +1,10 @@
-. ./config.sh
-
+#! /bin/bash
 curdir="$(pwd)"
+
+echo "Make sure you're connected to the internet before running this, ethernet's fine"
+read line;
+
+. ./config.sh
 
 cp "$curdir/.bashrc" "$HOME"
 source "$HOME/.bashrc"
@@ -9,7 +13,6 @@ sudo cp "$curdir/rundwm" /usr/local/bin
 # Apt update stuff
 sudo apt upgrade
 sudo apt update -y
-
 
 if [[ $* != --no-tmux ]]; then
     # tmux conf
