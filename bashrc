@@ -112,7 +112,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-if [[ -z $DISPLAY ]]; then
+if [[ -z $DISPLAY ]] && [[ command -v 'startx' ]]; then
 	exec startx;
 fi
 
