@@ -1,2 +1,4 @@
-$wifi="wlp2s0"
-$ethernet="enp3s0f1"
+#! /bin/bash
+
+wifi="wlan0"
+ethernet="enp3s0f1"
