@@ -1,14 +1,14 @@
 #! /bin/bash
-curdir="$(pwd)"
+script_dir="$(pwd)"
 echo "Installing for user $HOME"
 echo "Make sure you're connected to the internet before running this, ethernet's fine"
 read line;
 
 . ./config.sh
 
-cp "$curdir/bashrc" "$HOME/.bashrc"
+cp "$script_dir/bashrc" "$HOME/.bashrc"
 . "$HOME/.bashrc"
-cp "$curdir/rundwm" /usr/local/bin
+cp "$script_dir/rundwm" /usr/local/bin
 
 has_param () {
 	local term="$1"
@@ -33,7 +33,7 @@ if ! has_param '--no-tmux' "$@"; then
 	# tmux conf
 	echo "TMUX INSTALL"
 	apt install tmux -y
-	cp "$curdir/tmux.conf" "$HOME/.tmux.conf"
+	cp "$script_dir/tmux.conf" "$HOME/.tmux.conf"
 	echo "Tmux installed"
 fi
 
@@ -53,12 +53,14 @@ if ! has_param '--no-dwm' "$@"; then
 	echo "DWM INSTALL"
 	read line;
 	mkdir /src
-	apt install x11-common -y
-	git clone https://git.suckless.org/dwm /src/dwm
-	git apply --directory=/src/dwm "$curdir/dwm-diff-file"
+	apt install xorg xinit x11-common libx11-dev libxinerama-dev libxft-dev -y
 	cd /src/dwm
+	git clone https://git.suckless.org/dwm /src/dwm
+    chown -hR soda /src
 	make
-	cd "$curdir"
+	git apply --directory=/src/dwm "./dwm-diff-file"
+	make
+	cd "$script_dir"
 
 	# Enable dwm in x11
 	touch "$HOME/.xinitrc"
@@ -71,13 +73,13 @@ if ! has_param '--no-vim' "$@"; then
 	echo "VIM INSTALL"
 	apt install vim -y
 	GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_rsa" git clone git@github.com:StevenLaczko/vim-install.git
-	chmod +x "$curdir/vim-install/install.sh"
+	chmod +x "$script_dir/vim-install/install.sh"
     nomdcat=""
     if has_param '--no-mdcat' "$@"; then
         nomdcat="--no-mdcat"
     fi
-	HOME="$HOME" "$curdir/vim-install/install.sh" "$nomdcat"
-    rm -rf "$curdir/vim-install"
+	HOME="$HOME" "$script_dir/vim-install/install.sh" "$nomdcat"
+    rm -rf "$script_dir/vim-install"
 fi
 
 # Apt update stuff
