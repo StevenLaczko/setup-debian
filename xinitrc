@@ -7,4 +7,5 @@
 # invoke global X session script
 # /etc/X11/Xsession
 
+systemctl --user import-environment DISPLAY
 exec /usr/local/bin/rundwm

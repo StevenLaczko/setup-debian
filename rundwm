@@ -2,7 +2,48 @@
 /src/dwm/dwm &
 pid=$!
 
+# customize
+# amount of time to show battery low warning
+time_to_notify=100
+percent_to_notify=30
+
+do_bat_notif=1
+time_var=0
+
+# display percentage power and time at top of screen
+# also says when battery is low in status bar
 while kill -0 $pid 2> /dev/null; do
-    xsetroot -name "$(upower -d | grep battery_BAT1 -A 21 | grep -i 'percentage' | sed 's/:[[:blank:]]*/: /') | $(date)"
+    state_str="$(upower -d | grep state: | head -n 1)"
+    cur_power="$(upower -d | grep battery_BAT1 -A 30 | grep -i -m 1 'percentage' | sed 's/\([[:space:]]*.*:[[:space:]]*\)\([0-9]*\).*/\2/')"
+    if [[ $state_str == *fully-charged* ]]; then
+        power_str="I am charged!"
+    elif [[ $state_str == *discharging*  ]]; then
+        power_str="Uber: $cur_power%"
+    else
+        power_str="Charging Uber: $cur_power%"
+    fi
+    cur_time="$(date +%s)"
+    # shows battery notif for (time_to_notify) seconds ONCE after cur_power is less than (percent_to_notify)
+    if [[ $do_bat_notif = 1 && $cur_power -lt $percent_to_notify ]]; then
+        if [ $time_var -eq 0 ]; then
+            time_var="$(date +%s)"
+        fi
+        let "doing_bat_notif=1"
+        xsetroot -name "+++ BATTERY LOW +++ | $(date)"
+        # if warning has displayed for 10 seconds, disable warning
+        let "diff=cur_time-time_var"
+        if [[ diff -gt $time_to_notify ]]; then
+            do_bat_notif=0
+            time_var=0
+        fi
+    else
+        #xsetroot -name "$(upower -d | grep battery_BAT1 -A 30 | grep -i -m 1 'percentage' | sed 's/.*:[[:blank:]]*/power: /') | $(date '+%a %b %d %r')"
+        xsetroot -name "$power_str | $(date '+%a %b %d %r')"
+    fi
+
+    if [[ $cur_power -gt $percent_to_notify ]]; then
+        do_bat_notif=1
+    fi
+
     sleep 0.5s
 done;
