@@ -6,8 +6,13 @@ read line;
 
 . ./config.sh
 
-cp "$script_dir/bashrc" "$HOME/.bashrc"
-. "$HOME/.bashrc"
+if [[ "$SHELL" == *bash* ]]; then
+    cp "$script_dir/bashrc" "$HOME/.bashrc"
+    . "$HOME/.bashrc"
+elif [[ "$SHELL" == *zsh* ]]; then
+    cp "$script_dir/zshrc" "$HOME/.zshrc"
+    . "$HOME/.zshrc"
+fi
 cp "$script_dir/rundwm" /usr/local/bin
 
 has_param () {
@@ -20,7 +25,6 @@ has_param () {
 	done
 	return 1
 }
-
 
 # Apt update stuff
 if ! has_param '--no-apt' "$@"; then
